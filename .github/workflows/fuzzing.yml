@@ -28,12 +28,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install flask atheris
+
     - name: Run fuzzing test
       run: python fuzz_test.py -max_total_time=300
+
     - name: Check for crashes
       run: |
         mkdir -p fuzzing_results
@@ -44,8 +47,9 @@ jobs:
         else
           echo "No crashes found." > fuzzing_results/summary.txt
         fi
+
     - name: Upload fuzzing results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: fuzzing-results
         path: fuzzing_results
