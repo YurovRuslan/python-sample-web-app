@@ -86,3 +86,19 @@ def index():
     wordoftheday = get_secret()
     todaystime = query_time()
     return render_template('index.html', wordoftheday=wordoftheday, time=todaystime, ip=ipinfo)
+    
+@app.route('/post', methods=['POST'])
+def post_data():
+    data = request.json
+    if not data or 'input' not in data:
+        return jsonify({'error': 'Invalid input'}), 400
+    
+    input_str = data['input']
+    
+    # Уязвимость: деление на ноль
+    result = 100 / len(input_str)
+    
+    if len(input_str) > 100:
+        return jsonify({'error': 'Input too long'}), 400
+    
+    return jsonify({'result': result})
