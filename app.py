@@ -3,7 +3,7 @@ import json
 import os
 import requests
 from sys import exc_info
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, jsonify
 from opencensus.ext.azure.log_exporter import AzureLogHandler
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
@@ -14,9 +14,6 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
 )
 logger = logging.getLogger(__name__)
-logger.addHandler(AzureLogHandler(
-    connection_string=os.getenv('APPLICATIONINSIGHTS_CONNECTION_STRING'))
-)
 
 
 # Setup up a Flask instance
@@ -82,21 +79,24 @@ def get_ip(web_request):
 # Render the template
 @app.route("/")
 def index():
-    ipinfo = get_ip(web_request=request)
-    wordoftheday = get_secret()
+    # ipinfo = get_ip(web_request=request)
+    # wordoftheday = get_secret()
     todaystime = query_time()
-    return render_template('index.html', wordoftheday=wordoftheday, time=todaystime, ip=ipinfo)
+    return render_template('index.html', time=todaystime)
     
 @app.route('/post', methods=['POST'])
 def post_data():
+    print("request", request)
     data = request.json
+    print("data", data)
     if not data or 'input' not in data:
         return jsonify({'error': 'Invalid input'}), 400
     
     input_str = data['input']
     
     # Уязвимость: деление на ноль
-    result = 100 / len(input_str)
+    print(input_str, len(input_str))
+    result = 5 / len(input_str)
     
     if len(input_str) > 100:
         return jsonify({'error': 'Input too long'}), 400

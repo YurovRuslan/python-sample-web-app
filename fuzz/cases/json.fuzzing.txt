@@ -1,0 +1,10 @@
+{}
+{"input":""}
+{"input":"a"}
+{"input":"ab"}
+{"input":"abc"}
+{"input":"abcd"}
+{"input":"abcde"}
+{"input":"abcdef"}
+{"input":"abcdefg"}
+{"input":"deadbeef"}
