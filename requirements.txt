@@ -3,3 +3,4 @@ requests
 opencensus-ext-azure
 azure-identity
 azure-keyvault-secrets
+gunicorn

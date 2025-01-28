@@ -102,3 +102,6 @@ def post_data():
         return jsonify({'error': 'Input too long'}), 400
     
     return jsonify({'result': result})
+
+if __name__ == "__main__":
+    app.run()

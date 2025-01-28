@@ -36,19 +36,25 @@ jobs:
       run: |
         pip3 install -r requirements.txt
 
-    - name: Install FFUF
-      run: go install github.com/ffuf/ffuf/v2@latest
-
     - name: Create result dir
       run: |
         mkdir -p fuzzing_results
 
-    - name: Run app
-      run: python3 -m flask run
+    - name: Docker build
+      run: docker build . -t cont
+
+    - name: Docker run
+      run: docker run -d --network host --rm -it cont
+
+    - name: docker ps
+      run: docker ps
 
     - name: Run ffuf
       run: |
-        ffuf -X POST -H 'Content-Type: application/json' -d 'FUZZ' -w fuzz/cases/json.fuzzing.txt -u http://127.0.0.1:5000/post -mc 500
+        sleep 5; ./ffuf -X POST -H 'Content-Type: application/json' -d 'FUZZ' -w fuzz/cases/json.fuzzing.txt -o fuzzing_results/res.txt -u http://localhost:8000/post -mc 500
+
+    - name: docker ps
+      run: docker ps
 
     - name: Upload fuzzing results
       uses: actions/upload-artifact@v4
